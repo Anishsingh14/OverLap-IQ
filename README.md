@@ -1,6 +1,6 @@
 <h1 align="center">🔍 OverLap-IQ</h1>
 
-<h3 align="center">High-Dimensional Document Duplicate & Plagiarism Scanner</h3>
+<h3 align="center">High-Dimensional Document Duplicacy & Plagiarism Scanner</h3>
 
 <p>
   <img src="https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
