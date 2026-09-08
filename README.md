@@ -1,6 +1,6 @@
-# 🔍 OverLap-IQ
+<h1 align="center">🔍 OverLap-IQ</h1>
 
-### High-Dimensional Document Duplicate & Plagiarism Scanner
+<h3 align="center">High-Dimensional Document Duplicate & Plagiarism Scanner</h3>
 
 <p>
   <img src="https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python"/>
@@ -219,25 +219,17 @@ Notice it correctly identifies the two renewable-energy reference documents as t
 
 Every document plotted as a point in 2D "meaning space." Your document (★) lands right next to its true matches — visual proof the tool understands semantic closeness, not just keyword overlap.
 
-![PCA Scatter Plot](sample_output/1_pca_scatter.png)
-
 ### 2. Top Matches Bar Chart
 
 A quick-glance ranking of the most similar documents, color-coded by verdict tier (duplicate / moderately similar / distinct) with threshold guide lines.
-
-![Top Matches Bar Chart](sample_output/2_top_matches_bar.png)
 
 ### 3. Pairwise Similarity Heatmap
 
 Shows how similar *every* top-matching document is to *every other* one, with exact scores annotated on meaningfully similar cells — useful for spotting clusters of duplicate/near-duplicate content across your whole repository at a glance.
 
-![Similarity Heatmap](sample_output/3_similarity_heatmap.png)
-
 ### 4. PCA Scree Plot
 
 Shows how much information (variance) each principal component captures, with the point where 90% of variance is retained called out directly on the chart — this is what justifies *how many* dimensions PCA keeps.
-
-![Scree Plot](sample_output/4_pca_scree_plot.png)
 
 ---
 
