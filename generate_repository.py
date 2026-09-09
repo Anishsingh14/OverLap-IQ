@@ -1,6 +1,4 @@
 """
-generate_repository.py
-------------------------
 Creates the bundled reference document repository used by the
 Plagiarism & Duplicate Scanner. This runs ONCE to populate the
 `Reference_Topics/` folder with sample documents so that TF-IDF and PCA
