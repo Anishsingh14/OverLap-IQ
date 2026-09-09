@@ -1,50 +1,7 @@
-#!/usr/bin/env python3
 """
-================================================================================
- OverLap-IQ
- High-Dimensional Document Duplicate & Plagiarism Scanner
- Method: Semantic Embeddings (or TF-IDF fallback) + PCA + Cosine Similarity
-================================================================================
-
-WHAT THIS DOES
----------------
-1. Asks you (interactively) for a document to scan (.pdf or .txt).
-2. Loads a bundled repository of reference documents (Reference_Topics/ folder) --
-   no manual downloads needed, everything is self-contained.
-3. Vectorizes all text using SEMANTIC SENTENCE EMBEDDINGS (all-MiniLM-L6-v2),
-   which capture MEANING rather than exact word overlap -- so a passage
-   reworded with completely different vocabulary is still caught, as long
-   as it means the same thing. If the embedding model can't be loaded (no
-   internet on first run, or the optional package isn't installed), the
-   tool automatically falls back to TF-IDF so it still works offline.
-4. Reduces dimensionality using PCA.
-5. Computes Cosine Similarity between your document and every reference
-   document in the repository.
-6. Prints a ranked similarity report and a verdict.
-7. Saves 4 visualization charts to the output/ folder.
-
-WHY EMBEDDINGS FIX THE "DIFFERENT VOCABULARY" PROBLEM
--------------------------------------------------------
-TF-IDF only recognizes documents as similar if they share actual words.
-"The feline rested on the mat" and "The cat slept on the rug" share almost
-no vocabulary, so TF-IDF sees them as unrelated. A sentence embedding model,
-trained on millions of paraphrase pairs, maps both sentences to nearly the
-same point in vector space -- because it has learned MEANING, not just
-word identity. That's what closes this gap.
-
-HOW TO RUN
------------
-    python main.py
-
-Then, when prompted, type/paste the path to a .pdf or .txt file. To try it
-immediately, use the bundled sample:
-
-    sample_input/Sample_Document.txt
-
-NOTE: the first time you run this with sentence-transformers installed, it
+The first time you run this with sentence-transformers installed, it
 will download the small (~80 MB) embedding model once and cache it locally.
 Every run after that is fully offline.
-================================================================================
 """
 
 import os
@@ -76,9 +33,8 @@ except ImportError:
         PDF_SUPPORT = False
 
 
-# --------------------------------------------------------------------------
 # Paths / Config
-# --------------------------------------------------------------------------
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_DIR = os.path.join(BASE_DIR, "Reference_Topics")
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
@@ -103,9 +59,8 @@ def try_load_embedding_model():
         return None
 
 
-# --------------------------------------------------------------------------
 # Text extraction
-# --------------------------------------------------------------------------
+
 def extract_text_from_pdf(path):
     if not PDF_SUPPORT:
         raise RuntimeError(
@@ -147,9 +102,8 @@ def load_repository(repo_dir):
     return names, texts
 
 
-# --------------------------------------------------------------------------
 # Preprocessing
-# --------------------------------------------------------------------------
+
 def clean_text_for_tfidf(text):
     """Lowercase and strip everything except letters/spaces.
     Stopword removal is handled separately by TfidfVectorizer(stop_words='english').
@@ -168,9 +122,8 @@ def clean_text_for_embedding(text):
     return text
 
 
-# --------------------------------------------------------------------------
 # Interactive input
-# --------------------------------------------------------------------------
+
 def get_user_file():
     print("=" * 72)
     print("  OverLap-IQ")
@@ -194,9 +147,8 @@ def get_user_file():
         return path
 
 
-# --------------------------------------------------------------------------
 # Classification thresholds
-# --------------------------------------------------------------------------
+
 def classify(score):
     if score >= 0.85:
         return "LIKELY DUPLICATE / PLAGIARIZED"
@@ -208,9 +160,8 @@ def classify(score):
         return "DISTINCT"
 
 
-# --------------------------------------------------------------------------
-# Visualizations -- OverLap-IQ brand style
-# --------------------------------------------------------------------------
+# Visualizations
+
 BRAND = {
     "primary": "#4C5FD5",    # indigo -- repository / baseline data
     "accent": "#E5484D",     # coral red -- high similarity / query highlight
@@ -286,7 +237,7 @@ def generate_visualizations(repo_pca, query_pca, repo_names, similarities, pca, 
         y_repo, y_query = np.zeros_like(x_repo), np.zeros_like(x_query)
         y_label = "Principal Component 2 (n/a -- only 1 component available)"
 
-    # ---- 1. 2D PCA Scatter Plot -----------------------------------------
+    # 2D PCA (Scatter Plot) 
     fig, ax = plt.subplots(figsize=(10, 7.5))
     fig.subplots_adjust(top=0.83, bottom=0.09, left=0.09, right=0.97)
 
@@ -321,7 +272,7 @@ def generate_visualizations(repo_pca, query_pca, repo_names, similarities, pca, 
     fig.savefig(os.path.join(OUTPUT_DIR, "1_pca_scatter.png"), dpi=160)
     plt.close(fig)
 
-    # ---- 2. Top-N Similarity Bar Chart -----------------------------------
+    # Top-N Similarity (Bar Chart) 
     top_n = min(10, len(repo_names))
     top_idx = order[:top_n]
     top_names = [repo_names[i].replace(".txt", "") for i in top_idx]
@@ -363,7 +314,7 @@ def generate_visualizations(repo_pca, query_pca, repo_names, similarities, pca, 
     fig.savefig(os.path.join(OUTPUT_DIR, "2_top_matches_bar.png"), dpi=160)
     plt.close(fig)
 
-    # ---- 3. Pairwise Similarity Heatmap (top matches) --------------------
+    # Pairwise Similarity Heatmap (top matches) 
     n_show = min(12, len(repo_names))
     show_idx = order[:n_show]
     subset = repo_pca[show_idx]
@@ -402,7 +353,7 @@ def generate_visualizations(repo_pca, query_pca, repo_names, similarities, pca, 
     fig.savefig(os.path.join(OUTPUT_DIR, "3_similarity_heatmap.png"), dpi=160)
     plt.close(fig)
 
-    # ---- 4. PCA Explained Variance (Scree Plot) --------------------------
+    # PCA Explained Variance (Scree Plot) 
     var_ratio = pca.explained_variance_ratio_
     cum_var = np.cumsum(var_ratio)
 
@@ -434,9 +385,9 @@ def generate_visualizations(repo_pca, query_pca, repo_names, similarities, pca, 
     plt.close(fig)
 
 
-# --------------------------------------------------------------------------
+
 # Main pipeline
-# --------------------------------------------------------------------------
+
 def main():
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
