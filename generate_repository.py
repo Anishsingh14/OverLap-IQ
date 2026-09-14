@@ -1,4 +1,12 @@
+"""
+Creates the bundled reference document repository used by the
+Plagiarism & Duplicate Scanner. This runs ONCE to populate the
+`Reference_Topics/` folder with sample documents so that TF-IDF and PCA
+have real data to fit on -- no external downloads required.
 
+Run this only if you want to regenerate/reset the repository, or
+if you want to add your own topics to expand it.
+"""
 
 import os
 
