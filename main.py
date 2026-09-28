@@ -1,7 +1,7 @@
 """
 The first time you run this with sentence-transformers installed, it
 will download a small (~80 MB) embedding model once and cache it locally.
-Every run after that is fully offline respectively.
+Every run after that will be fully offline respectively.
 """
 
 import os
