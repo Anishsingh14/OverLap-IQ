@@ -1,8 +1,4 @@
-"""
-The first time you run this with sentence-transformers installed, it
-will download the small (~80 MB) embedding model once and cache it locally.
-Every run after that is fully offline.
-"""
+
 
 import os
 import re
